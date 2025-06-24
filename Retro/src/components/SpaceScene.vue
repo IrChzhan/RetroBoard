@@ -9,6 +9,7 @@
     >
       <div class="emoji">{{ obj.emoji }}</div>
       <div class="short-description">{{ obj.shortDescription }}</div>
+      <div v-if="!obj.isAnonymousAuthor" class="author-name">{{ obj.author }}</div> 
       <button class="open-button" @click="openCommentModal(obj)">Открыть</button>
     </div>
 
@@ -40,7 +41,7 @@ onMounted(() => {
 })
 
 function handleAddObject(e) {
-  const { type, shortDescription, fullDescription, isAnonymous } = e.detail
+  const { type, shortDescription, fullDescription, isAnonymous, author } = e.detail 
 
   const emoji = {
     star: '🌟',
@@ -60,7 +61,8 @@ function handleAddObject(e) {
     y,
     shortDescription,
     fullDescription,
-    isAnonymous,
+    isAnonymousAuthor: isAnonymous, 
+    author, 
     likes: 0,
     dislikes: 0,
     comments: []
@@ -145,6 +147,12 @@ function updateObject(updatedObject) {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
   text-align: center;
+}
+
+.author-name {
+  font-size: 12px;
+  color: #ccc;
+  margin-bottom: 5px;
 }
 
 .open-button {

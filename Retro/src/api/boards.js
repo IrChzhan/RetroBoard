@@ -44,3 +44,57 @@ export async function requestAccessByToken(boardId, token) {
     const res = await axios.post(`/boards/${boardId}/invite`, { token })
     return res.data
 }
+
+// Добавить компонент на доску
+export async function addComponentToBoard(boardId, componentData) {
+    const res = await axios.post(`/boards/${boardId}/components`, componentData)
+    return res.data
+}
+
+// Получить все компоненты доски
+export async function getBoardComponents(boardId) {
+    const res = await axios.get(`/boards/${boardId}/components`)
+    return res.data
+}
+
+// Изменить компонент
+export async function updateComponent(componentId, componentData) {
+    const res = await axios.patch(`/components/${componentId}`, componentData)
+    return res.data
+}
+
+// Удалить компонент
+export async function deleteComponent(componentId) {
+    const res = await axios.delete(`/components/${componentId}`)
+    return res.data
+}
+
+// Проголосовать за компонент
+export async function voteForComponent(componentId) {
+    const res = await axios.post(`/components/${componentId}/vote`)
+    return res.data
+}
+
+// Удалить голос за компонент
+export async function deleteVoteForComponent(componentId) {
+    const res = await axios.delete(`/components/${componentId}/vote`)
+    return res.data
+}
+
+// Получить список ресурсов по типу
+export async function getSvgTemplatesByType(type) {
+    const res = await axios.get(`/svg-template?type=${type}`) // Добавил query параметр
+    return res.data
+}
+
+// Получить ресурс по ID
+export async function getSvgTemplateById(id) {
+    const res = await axios.get(`/svg-template/${id}`)
+    return res.data
+}
+
+// Получить список всех ресурсов
+export async function getAllSvgTemplates() {
+    const res = await axios.get('/svg-template/all')
+    return res.data
+}

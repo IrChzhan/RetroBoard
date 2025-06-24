@@ -6,8 +6,6 @@ const API_BASE = 'http://localhost:8080'
 const instance = axios.create({
     baseURL: API_BASE
 })
-
-// Подставляем токен в каждый запрос
 instance.interceptors.request.use(
     function(config) {
         const token = localStorage.getItem('accessToken')

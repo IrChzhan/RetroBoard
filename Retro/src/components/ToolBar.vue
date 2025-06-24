@@ -8,6 +8,7 @@
     >
       <div class="emoji">{{ item.emoji }}</div>
       <div class="counter">{{ item.count }}</div>
+      <img v-if="item.svgSource" :src="item.svgSource" alt="SVG Template" class="svg-icon"> 
     </div>
 
     <ModalWindow
@@ -21,17 +22,31 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import ModalWindow from './Modal.vue'
+import { getSvgTemplatesByType } from '../api/boards'
 
 const items = reactive([
-  { emoji: '🌟', type: 'star', count: 3 },
-  { emoji: '🪐', type: 'planet', count: 3 },
-  { emoji: '💥', type: 'asteroid', count: 3 }
+  { emoji: '🌟', type: 'star', count: 3, svgSource: null },
+  { emoji: '🪐', type: 'planet', count: 3, svgSource: null },
+  { emoji: '💥', type: 'asteroid', count: 3, svgSource: null }
 ])
 
 const showModal = ref(false)
 const selectedItem = ref(null)
+
+onMounted(async () => {
+  for (const item of items) {
+    try {
+      const templates = await getSvgTemplatesByType(item.type)
+      if (templates && templates.length > 0) {
+        item.svgSource = templates[0].source
+      }
+    } catch (err) {
+      console.error(`Ошибка загрузки SVG для ${item.type}:`, err)
+    }
+  }
+})
 
 function openModal(item) {
   if (item.count <= 0) return
@@ -49,7 +64,8 @@ function handleSubmit({ shortDescription, fullDescription, isAnonymous }) {
       type: selectedItem.value.type,
       shortDescription,
       fullDescription,
-      isAnonymous
+      isAnonymous,
+      author: localStorage.getItem('userLogin')
     }
   })
   window.dispatchEvent(event)
